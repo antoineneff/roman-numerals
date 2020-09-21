@@ -2,7 +2,7 @@
   <div id="app">
     <h1>Convertir un nombre en chiffres romains</h1>
     <form @submit.prevent="sendNumber" ref="form">
-      <input v-model.number="number" autofocus type="number">
+      <input v-model.number="number" autofocus type="number" min="1" max="100">
       <input type="submit" value="Convertir">
     </form>
     <h2>Resultat : {{ roman }}</h2>
@@ -27,6 +27,7 @@ export default {
         const json = await response.json()
         if (json.error) {
           // HANDLE SERVER ERROR (VALIDATION)
+          this.roman = ''
           this.error = json.error
         } else {
           this.roman = json.roman
