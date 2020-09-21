@@ -1,7 +1,6 @@
 const express = require('express')
-const { validate } = require('indicative/validator')
 const romanize = require('./romanize')
-const { errorMiddleware, ValidationError } = require('./errors')
+const { errorMiddleware } = require('./errors')
 
 const port = 8888
 
@@ -20,14 +19,6 @@ function init() {
     })
 
     app.post('/romanize', async (req, res, next) => {
-      try {
-        const rules = { number: 'required' }
-        const messages = { 'number.required': 'Merci de renseigner un nombre' }
-        await validate(req.body, rules, messages)
-      } catch (errors) {
-        return next(new ValidationError(errors[0].message))
-      }
-
       try {
         const roman = romanize(req.body.number)
         res.json({ roman })

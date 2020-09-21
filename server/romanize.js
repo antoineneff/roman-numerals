@@ -11,6 +11,10 @@ const values = [100, 99, 90, 50, 49, 40, 10, 9, 5, 4, 1]
  */
 
 function convert(number) {
+  // PARAMETER SHOULD BE DEFINED
+  if (!number) {
+    throw new ValidationError('Merci de renseigner un nombre')
+  }
   // PARAMETER SHOULD BE A NUMBER
   if (typeof number !== 'number') {
     throw new ValidationError('Merci de renseigner un nombre valide')
