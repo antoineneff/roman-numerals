@@ -1,0 +1,23 @@
+{
+  "name": "roman-numerals-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Antoine Neff",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "indicative": "^7.4.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0",
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4"
+  }
+}
