@@ -12,8 +12,7 @@
   "author": "Antoine Neff",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "indicative": "^7.4.4"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "eslint": "^7.9.0",

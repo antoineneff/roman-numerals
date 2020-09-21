@@ -16,24 +16,35 @@ export default {
   data() {
     return { number: 1, roman: '', error: '' }
   },
+  created() {
+    // CONNECT TO SSE
+    const events = new EventSource('http://localhost:8888/events')
+    events.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      if (data.error) {
+        this.roman = ''
+        this.error = data.error
+      } else {
+        this.roman = data.roman
+        this.error = ''
+      }
+    }
+
+    events.onerror = (event) => {
+      this.roman = ''
+      this.error = event.data
+    }
+  },
   methods: {
     async sendNumber() {
       try {
-        const response = await fetch('http://localhost:8888/romanize', {
+        await fetch('http://localhost:8888/romanize', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ number: this.number })
         })
-        const json = await response.json()
-        if (json.error) {
-          // HANDLE SERVER ERROR (VALIDATION)
-          this.error = json.error
-        } else {
-          this.roman = json.roman
-          this.error = ''
-        }
       } catch (err) {
-        // HANDLE REQUEST ERROR (NETWORK)
+        // HANDLE REQUEST ERROR
         this.error = err.message
       }
     }

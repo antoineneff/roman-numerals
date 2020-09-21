@@ -1,7 +1,7 @@
 const express = require('express')
-const { validate } = require('indicative/validator')
 const romanize = require('./romanize')
-const { errorMiddleware, ValidationError } = require('./errors')
+const { errorMiddleware } = require('./errors')
+const events = require('./events')
 
 const port = 8888
 
@@ -21,19 +21,29 @@ function init() {
 
     app.post('/romanize', async (req, res, next) => {
       try {
-        const rules = { number: 'required' }
-        const messages = { 'number.required': 'Merci de renseigner un nombre' }
-        await validate(req.body, rules, messages)
-      } catch (errors) {
-        return next(new ValidationError(errors[0].message))
-      }
-
-      try {
-        const roman = romanize(req.body.number)
-        res.json({ roman })
+        const romanNumber = romanize(req.body.number)
+        events.emit('roman', romanNumber)
+        res.status(200).end()
       } catch (err) {
         next(err)
       }
+    })
+
+    app.get('/events', (req, res) => {
+      console.info('Client connected to sse')
+      const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+      }
+      res.writeHead(200, headers)
+
+      events.on('roman', (roman) => {
+        res.write(`data: ${JSON.stringify({ roman })}\n\n`)
+      })
+      events.on('error', (err) => {
+        res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`)
+      })
     })
 
     // ERROR HANDLING
